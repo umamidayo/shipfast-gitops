@@ -12,4 +12,4 @@ components:
 images:
   - name: status-check
     newName: localhost:5001/status-check
-    newTag: "dev"
+    newTag: "62b2c1d"
