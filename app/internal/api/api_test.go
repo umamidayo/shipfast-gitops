@@ -126,6 +126,21 @@ func TestMetrics(t *testing.T) {
 	}
 }
 
+func TestVersion(t *testing.T) {
+	rec := get(t, New(newRunner(t, false), "abc1234"), "/api/v1/version")
+	var body struct {
+		Version       string    `json:"version"`
+		StartedAt     time.Time `json:"startedAt"`
+		UptimeSeconds *int64    `json:"uptimeSeconds"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
+	if rec.Code != http.StatusOK || body.Version != "abc1234" || body.StartedAt.IsZero() || body.UptimeSeconds == nil {
+		t.Errorf("version: %d %s", rec.Code, rec.Body.String())
+	}
+}
+
 func TestMethodNotAllowed(t *testing.T) {
 	rec := httptest.NewRecorder()
 	New(newRunner(t, false), "test").ServeHTTP(rec, httptest.NewRequest(http.MethodPost, "/api/v1/status", nil))
