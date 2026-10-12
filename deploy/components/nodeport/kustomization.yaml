@@ -1,0 +1,17 @@
+# Exposes the Service on node port 30080. The Kind cluster maps that port to
+# the host (see infra/main.tf), so the API is reachable at http://localhost:8080.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+patches:
+  - patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: status-check
+      spec:
+        type: NodePort
+        ports:
+          - name: http
+            port: 80
+            nodePort: 30080

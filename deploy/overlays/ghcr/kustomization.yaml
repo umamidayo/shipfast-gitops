@@ -1,0 +1,16 @@
+# CI overlay: image comes from GitHub Container Registry. The GitHub Actions
+# workflow (.github/workflows/ci.yaml) bumps newName/newTag on every push to main.
+# Point Argo CD here with `app_path = "deploy/overlays/ghcr"` in terraform.tfvars.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+components:
+  - ../../components/nodeport
+
+images:
+  - name: status-check
+    newName: ghcr.io/your-org/status-check
+    newTag: latest

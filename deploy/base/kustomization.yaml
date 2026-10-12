@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: status-check
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: shipfast
+    includeSelectors: false
+
+resources:
+  - serviceaccount.yaml
+  - deployment.yaml
+  - service.yaml
+  - pdb.yaml
+
+# The hash suffix in the generated name means editing checks.json changes the
+# Deployment's pod template, so Argo CD rolls the pods on every config change.
+configMapGenerator:
+  - name: status-check-config
+    files:
+      - checks.json

@@ -1,0 +1,7 @@
+{
+  "checks": [
+    { "name": "dns-example", "type": "dns", "target": "example.com", "critical": true },
+    { "name": "web-example", "type": "http", "target": "https://example.com", "timeout": "5s" },
+    { "name": "self", "type": "tcp", "target": "127.0.0.1:8080", "timeout": "1s", "critical": true }
+  ]
+}

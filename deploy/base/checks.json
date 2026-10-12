@@ -1,0 +1,8 @@
+{
+  "checks": [
+    { "name": "kubernetes-api", "type": "tcp", "target": "kubernetes.default.svc:443", "critical": true },
+    { "name": "cluster-dns", "type": "dns", "target": "kubernetes.default.svc.cluster.local", "critical": true },
+    { "name": "argocd-server", "type": "http", "target": "http://argocd-server.argocd.svc.cluster.local/healthz" },
+    { "name": "internet-egress", "type": "http", "target": "https://example.com", "timeout": "5s" }
+  ]
+}

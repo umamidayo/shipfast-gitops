@@ -1,0 +1,15 @@
+# Default overlay: image comes from the local registry that OpenTofu runs next
+# to the Kind cluster. scripts/release.{sh,ps1} bumps newTag.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+components:
+  - ../../components/nodeport
+
+images:
+  - name: status-check
+    newName: localhost:5001/status-check
+    newTag: "dev"

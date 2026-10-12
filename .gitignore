@@ -1,0 +1,11 @@
+# OpenTofu
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfplan
+infra/terraform.tfvars
+infra/crash.log
+
+# Go
+app/status-check
+app/*.exe
