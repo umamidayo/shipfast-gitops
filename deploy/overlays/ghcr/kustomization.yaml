@@ -5,12 +5,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
+- ../../base
 
 components:
-  - ../../components/nodeport
+- ../../components/nodeport
 
 images:
-  - name: status-check
-    newName: ghcr.io/your-org/status-check
-    newTag: latest
+- name: status-check
+  newName: ghcr.io/umamidayo/status-check
+  newTag: 4a63962
