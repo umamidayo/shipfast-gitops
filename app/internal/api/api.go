@@ -15,6 +15,7 @@ import (
 type server struct {
 	runner  *checks.Runner
 	version string
+	started time.Time
 }
 
 // New returns the HTTP handler for the API.
@@ -22,7 +23,7 @@ type server struct {
 //	GET /healthz                 liveness (process is serving)
 //	GET /readyz                  readiness (first round of checks has completed)
 //	GET /metrics                 Prometheus metrics
-//	GET /api/v1/version          build version
+//	GET /api/v1/version          build version, start time and uptime
 //	GET /api/v1/status           aggregated report; 503 when overall status is "down"
 //	GET /api/v1/checks           configured checks
 //	GET /api/v1/checks/{name}    latest result for one check
@@ -30,7 +31,7 @@ type server struct {
 // /status and /checks/{name} accept ?refresh=true to run checks now instead of
 // returning the cached result.
 func New(runner *checks.Runner, version string) http.Handler {
-	s := &server{runner: runner, version: version}
+	s := &server{runner: runner, version: version, started: time.Now().UTC()}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", s.index)
 	mux.HandleFunc("GET /healthz", s.healthz)
@@ -67,7 +68,11 @@ func (s *server) readyz(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (s *server) versionInfo(w http.ResponseWriter, _ *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]string{"version": s.version})
+	writeJSON(w, http.StatusOK, map[string]any{
+		"version":       s.version,
+		"startedAt":     s.started,
+		"uptimeSeconds": int64(time.Since(s.started).Seconds()),
+	})
 }
 
 func (s *server) status(w http.ResponseWriter, r *http.Request) {
@@ -149,6 +154,8 @@ func refresh(r *http.Request) bool { return r.URL.Query().Get("refresh") == "tru
 
 func writeJSON(w http.ResponseWriter, code int, v any) {
 	w.Header().Set("Content-Type", "application/json")
+	// Status is live data; stop proxies and browsers from serving stale results.
+	w.Header().Set("Cache-Control", "no-store")
 	w.WriteHeader(code)
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")

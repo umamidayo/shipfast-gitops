@@ -2,7 +2,7 @@
 
 # Required: the repo Argo CD watches. It has to be reachable from inside the
 # cluster, so push this repo to GitHub/GitLab/etc. first.
-git_repo_url = "https://github.com/your-user/shipfast-gitops.git"
+git_repo_url = "https://github.com/umamidayo/shipfast-gitops"
 git_revision = "main"
 
 # Private repo? Provide a read-only token (GitHub: fine-grained PAT with

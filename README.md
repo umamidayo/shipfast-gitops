@@ -84,7 +84,7 @@ Commands are shown for bash (Linux, macOS, Git Bash on Windows). Where PowerShel
 
 ```bash
 git add -A && git commit -m "initial commit"
-git remote add origin https://github.com/<you>/shipfast-gitops.git
+git remote add origin https://github.com/umamidayo/shipfast-gitops
 git push -u origin main
 ```
 
@@ -210,7 +210,7 @@ A Go service with no third-party dependencies. It runs every configured check co
 | `GET /api/v1/status` | Aggregated report. **200** when `up`/`degraded`/`pending`, **503** when `down`, so uptime monitors can point straight at it |
 | `GET /api/v1/checks` | Configured checks |
 | `GET /api/v1/checks/{name}` | Latest result of one check (404 if unknown) |
-| `GET /api/v1/version` | Build version (git SHA) |
+| `GET /api/v1/version` | Build version (git SHA), `startedAt` and `uptimeSeconds` |
 | `GET /healthz` | Liveness: the process is serving |
 | `GET /readyz` | Readiness: the first round of checks has finished (503 before that) |
 | `GET /metrics` | Prometheus: `status_check_up`, `status_check_latency_seconds`, `status_check_overall_up`, `status_check_build_info` |

@@ -71,6 +71,9 @@ func TestStatus(t *testing.T) {
 		if rec.Code != tc.wantCode {
 			t.Errorf("critical=%v: code %d, want %d", tc.critical, rec.Code, tc.wantCode)
 		}
+		if cc := rec.Header().Get("Cache-Control"); cc != "no-store" {
+			t.Errorf("Cache-Control = %q, want no-store", cc)
+		}
 		var body struct {
 			Status  string `json:"status"`
 			Version string `json:"version"`
@@ -123,6 +126,21 @@ func TestMetrics(t *testing.T) {
 		if !strings.Contains(body, want) {
 			t.Errorf("metrics missing %q:\n%s", want, body)
 		}
+	}
+}
+
+func TestVersion(t *testing.T) {
+	rec := get(t, New(newRunner(t, false), "abc1234"), "/api/v1/version")
+	var body struct {
+		Version       string    `json:"version"`
+		StartedAt     time.Time `json:"startedAt"`
+		UptimeSeconds *int64    `json:"uptimeSeconds"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
+	if rec.Code != http.StatusOK || body.Version != "abc1234" || body.StartedAt.IsZero() || body.UptimeSeconds == nil {
+		t.Errorf("version: %d %s", rec.Code, rec.Body.String())
 	}
 }
 
