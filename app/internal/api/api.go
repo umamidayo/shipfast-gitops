@@ -154,6 +154,8 @@ func refresh(r *http.Request) bool { return r.URL.Query().Get("refresh") == "tru
 
 func writeJSON(w http.ResponseWriter, code int, v any) {
 	w.Header().Set("Content-Type", "application/json")
+	// Status is live data; stop proxies and browsers from serving stale results.
+	w.Header().Set("Cache-Control", "no-store")
 	w.WriteHeader(code)
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")

@@ -71,6 +71,9 @@ func TestStatus(t *testing.T) {
 		if rec.Code != tc.wantCode {
 			t.Errorf("critical=%v: code %d, want %d", tc.critical, rec.Code, tc.wantCode)
 		}
+		if cc := rec.Header().Get("Cache-Control"); cc != "no-store" {
+			t.Errorf("Cache-Control = %q, want no-store", cc)
+		}
 		var body struct {
 			Status  string `json:"status"`
 			Version string `json:"version"`
