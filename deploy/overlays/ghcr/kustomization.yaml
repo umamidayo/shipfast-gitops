@@ -13,4 +13,4 @@ components:
 images:
 - name: status-check
   newName: ghcr.io/umamidayo/status-check
-  newTag: 4a63962
+  newTag: e8aed85
